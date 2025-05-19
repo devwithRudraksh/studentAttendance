@@ -6,27 +6,33 @@ import com.rudraksh.attendance.entity.Student;
 import com.rudraksh.attendance.exception.StudentNotFoundException;
 import com.rudraksh.attendance.repository.StudentRepository;
 import com.rudraksh.attendance.service.StudentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/students")
 public class StudentController {
 
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private StudentService studentService;
+    private final StudentRepository studentRepository;
+    private final StudentService studentService;
+
+    public StudentController(StudentRepository studentRepository, StudentService studentService) {
+        this.studentRepository = studentRepository;
+        this.studentService = studentService;
+    }
 
 
 
     @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody StudentDTO studentDTO) {
-        Student savedStudent = studentService.addStudent(studentDTO);
+    public ResponseEntity<StudentResponseDTO> addStudent(@RequestBody StudentDTO studentDTO) {
+        log.info("POST /students called with name: {}, email: {}", studentDTO.getName(), studentDTO.getEmail());
+
+        StudentResponseDTO savedStudent = studentService.addStudent(studentDTO);
         return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);}
 
     @GetMapping
@@ -47,8 +53,10 @@ public class StudentController {
     }
     @GetMapping("/debug")
     public String debug() {
+        log.info("🔍 Inside /debug endpoint — logging works!");
         List<Student> all = studentRepository.findAll();
-        System.out.println("Fetched Students: " + all);
+        System.out.println("Fetched Students: " + all); // legacy
         return "Check logs";
     }
+
 }

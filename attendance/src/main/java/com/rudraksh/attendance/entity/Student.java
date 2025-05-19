@@ -2,12 +2,11 @@ package com.rudraksh.attendance.entity;
 
 import jakarta.persistence.*;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import lombok.NoArgsConstructor;
+@ToString
+
 @Entity
 @Table(name = "students")
 public class Student {
